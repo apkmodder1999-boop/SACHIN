@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Content | SACHIN ACADEMY</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2338bdf8'><path d='M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z'/></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        background: '#090d16',
+                        sidebar: '#0d121f',
+                        card: '#111622',
+                        surface: '#0c101a',
+                        'surface-raised': '#161c2c',
+                        border: 'rgba(255, 255, 255, 0.08)',
+                        foreground: '#f8fafc',
+                        'muted-foreground': '#94a3b8',
+                        primary: '#38bdf8',
+                        'primary-foreground': '#000000',
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'Inter', 'system-ui', 'sans-serif'],
+                        inter: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #090d16; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #38bdf8; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #090d16;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        .bg-dots {
+            background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        .glass-card {
+            background: rgba(17, 22, 34, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        .press {
+            transition: transform 0.15s ease, filter 0.15s ease, background-color 0.15s ease;
+        }
+        .press:active {
+            transform: scale(0.97);
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Quality Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(12px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        .modal-overlay.active { display: flex; }
+        .quality-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #f8fafc;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .quality-btn:hover {
+            background: rgba(56, 189, 248, 0.15);
+            border-color: #38bdf8;
+            color: #38bdf8;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col relative selection:bg-sky-500/30 selection:text-sky-200">
+
+    <!-- Ambient Glows -->
+    <div class="pointer-events-none fixed inset-0 z-0 bg-dots opacity-25"></div>
+    <div class="pointer-events-none fixed left-[-5%] top-[-5%] z-0 h-[350px] w-[350px] rounded-full bg-primary/20 blur-[140px]"></div>
+    <div class="pointer-events-none fixed bottom-[-10%] right-[-5%] z-0 h-[400px] w-[400px] rounded-full bg-primary/10 blur-[140px]"></div>
+
+    <!-- Video Quality Modal -->
+    <div id="quality-modal" class="modal-overlay">
+        <div class="glass-card border border-white/10 rounded-3xl p-6 sm:p-8 w-[90%] max-w-[420px] text-center relative shadow-2xl">
+            <button class="absolute top-4 right-4 text-muted-foreground hover:text-foreground text-xl" onclick="closeQualityModal()">&times;</button>
+            <div class="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto mb-4 text-primary">
+                <i class="fa-solid fa-sliders text-xl"></i>
+            </div>
+            <h2 class="text-xl font-black mb-2 text-foreground">Select Video Quality</h2>
+            <p class="text-xs text-muted-foreground mb-6">Choose your preferred stream resolution for optimal playback.</p>
+            <div id="quality-options" class="space-y-2"></div>
+        </div>
+    </div>
+
+    <!-- Top Navigation Header -->
+    <header class="sticky top-0 z-30 flex h-[70px] shrink-0 items-center justify-between gap-4 border-b border-border bg-background/80 px-4 backdrop-blur-xl sm:h-20 sm:px-6">
+        <div class="flex items-center gap-4">
+            <button onclick="window.location.href='index.html'" class="press flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-xs font-bold uppercase tracking-wider py-2 px-3 rounded-xl border border-border bg-card">
+                <i class="fa-solid fa-arrow-left"></i> <span class="hidden sm:inline">All Batches</span>
+            </button>
+            <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href='index.html'">
+                <div class="h-10 w-10 rounded-xl bg-sky-400/10 border border-sky-400/30 flex items-center justify-center text-primary shadow-sm">
+                    <i class="fa-solid fa-graduation-cap text-xl"></i>
+                </div>
+                <h1 class="text-lg md:text-xl font-black tracking-tight text-foreground">SACHIN <span class="text-[#38bdf8]">ACADEMY</span></h1>
+            </div>
+        </div>
+
+        <div class="flex shrink-0 items-center gap-2.5 sm:gap-4">
+            <a href="https://t.me/learn_topper" target="_blank" rel="noopener noreferrer" class="press flex items-center gap-1.5 rounded-full border border-sky-400/40 bg-sky-400/10 px-3.5 py-1.5 text-xs font-bold text-sky-400 shadow-sm transition-colors hover:bg-sky-400/20 active:scale-95">
+                <i class="fa-solid fa-paper-plane text-[11px]"></i>
+                <span>Telegram</span>
+            </a>
+            <span class="watermark hidden select-none text-sm font-black uppercase tracking-[0.3em] text-foreground/30 sm:inline sm:text-base">SACHIN ACADEMY</span>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-[1400px] w-full mx-auto p-4 md:p-6 lg:p-8 flex-1 relative z-10">
+
+        <!-- Course Banner -->
+        <div id="course-banner" class="glass-card rounded-3xl p-6 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6 mb-8 shadow-2xl relative overflow-hidden border border-border bg-gradient-to-br from-[#121827] to-[#090d16]">
+            <div class="absolute -top-24 -left-24 w-64 h-64 bg-primary/20 blur-[100px] rounded-full pointer-events-none"></div>
+
+            <div class="flex flex-col items-start gap-3 flex-1 w-full relative z-10">
+                <div class="flex items-center gap-2 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-[11px] font-black text-emerald-400 uppercase tracking-widest">
+                    <div class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></div>
+                    ENROLLED BATCH
+                </div>
+                <h2 id="course-title" class="text-2xl sm:text-4xl md:text-5xl font-black text-foreground leading-tight tracking-tight">
+                    Loading Batch...
+                </h2>
+                <p class="text-sm text-muted-foreground font-medium">Select a subject below to explore chapters, videos, and study material.</p>
+            </div>
+        </div>
+
+        <!-- Main Navigation Tabs -->
+        <div class="flex gap-6 sm:gap-8 border-b border-border mb-8 overflow-x-auto no-scrollbar">
+            <button id="tab-subjects" onclick="switchMainTab('subjects')" class="pb-3 text-sm md:text-base font-bold flex items-center gap-2 text-sky-400 border-b-2 border-primary transition-colors whitespace-nowrap">
+                <i class="fa-solid fa-folder-open"></i> SUBJECTS
+            </button>
+            <button id="tab-live" onclick="switchMainTab('live')" class="pb-3 text-sm md:text-base font-bold flex items-center gap-2 text-muted-foreground hover:text-foreground border-b-2 border-transparent transition-colors whitespace-nowrap">
+                <i class="fa-solid fa-video"></i> LIVE CLASSES
+            </button>
+        </div>
+
+        <!-- Loader -->
+        <div id="loader" class="flex flex-col justify-center items-center py-24 hidden">
+            <div class="w-12 h-12 border-4 border-card border-t-primary rounded-full animate-spin shadow-[0_0_20px_rgba(56,189,248,0.4)]"></div>
+            <p class="text-muted-foreground text-sm mt-4 font-medium animate-pulse">Loading Content...</p>
+        </div>
+
+        <!-- Error State -->
+        <div id="error-container" class="hidden flex flex-col items-center justify-center py-20 text-center">
+            <div class="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mb-4 border border-red-500/20 text-red-400">
+                <i class="fa-solid fa-triangle-exclamation text-2xl"></i>
+            </div>
+            <h3 class="text-lg font-bold text-foreground mb-1">Notice</h3>
+            <p id="error-message" class="text-sm text-red-400 max-w-md"></p>
+        </div>
+
+        <!-- Section: Subjects -->
+        <div id="section-subjects" class="block">
+            <div id="subjects-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6">
+                <!-- Subjects dynamically rendered here -->
+            </div>
+        </div>
+
+        <!-- Section: Live -->
+        <div id="section-live" class="hidden">
+            <div class="flex gap-3 mb-6">
+                <button id="subtab-live-now" onclick="switchLiveTab('live-now')" class="px-5 py-2 text-xs md:text-sm font-bold rounded-xl bg-primary text-black transition-colors shadow-md">
+                    Live Now
+                </button>
+                <button id="subtab-previous" onclick="switchLiveTab('previous')" class="px-5 py-2 text-xs md:text-sm font-bold rounded-xl bg-card text-muted-foreground border border-border hover:text-foreground hover:border-primary/40 transition-colors">
+                    Previous Classes
+                </button>
+                <button id="subtab-upcoming" onclick="switchLiveTab('upcoming')" class="px-5 py-2 text-xs md:text-sm font-bold rounded-xl bg-card text-muted-foreground border border-border hover:text-foreground hover:border-primary/40 transition-colors">
+                    Upcoming Classes
+                </button>
+            </div>
+
+            <div id="live-content-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Live items dynamically rendered here -->
+            </div>
+
+            <div id="live-empty" class="hidden flex flex-col items-center justify-center py-16 text-center">
+                <div class="w-16 h-16 bg-surface rounded-full flex items-center justify-center mb-4 border border-border text-muted-foreground">
+                    <i class="fa-solid fa-video-slash text-2xl"></i>
+                </div>
+                <h4 class="text-foreground font-bold text-base mb-1">No Classes Scheduled</h4>
+                <p class="text-muted-foreground text-xs">There are no classes currently available in this section.</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const API_BASE = window.location.origin;
+        const PDF_BASE = 'https://pdfweb.classx.co.in/pdfjs-latest/web/viewer.html?file=';
+
+        let currentCourseName = 'Batch';
+        let currentMainTab = 'subjects';
+        let currentLiveTab = 'live-now';
+        let activeVideoTitle = 'Class';
+
+        function getUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            const result = {};
+            for (const [key, value] of params.entries()) { result[key] = value; }
+            return result;
+        }
+
+        const urlParams = getUrlParams();
+        const courseId = urlParams.id;
+        if (urlParams.name) {
+            currentCourseName = decodeURIComponent(urlParams.name);
+            document.getElementById('course-title').textContent = currentCourseName;
+        }
+
+        async function fetchData(url) {
+            try {
+                const cached = sessionStorage.getItem(url);
+                if (cached) return JSON.parse(cached);
+                
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+                sessionStorage.setItem(url, JSON.stringify(data));
+                return data;
+            } catch (error) {
+                console.error("Fetch error: ", error);
+                return null;
+            }
+        }
+
+        function showUI(state, message = '') {
+            document.getElementById('loader').classList.add('hidden');
+            document.getElementById('error-container').classList.add('hidden');
+            document.getElementById('subjects-container').classList.add('hidden');
+            document.getElementById('live-content-container').classList.add('hidden');
+            document.getElementById('live-empty').classList.add('hidden');
+            
+            if (state === 'loader') {
+                document.getElementById('loader').classList.remove('hidden');
+            } else if (state === 'error') {
+                document.getElementById('error-container').classList.remove('hidden');
+                document.getElementById('error-message').textContent = message;
+            } else if (state === 'subjects') {
+                document.getElementById('subjects-container').classList.remove('hidden');
+            } else if (state === 'live-content') {
+                document.getElementById('live-content-container').classList.remove('hidden');
+            } else if (state === 'live-empty') {
+                document.getElementById('live-empty').classList.remove('hidden');
+            }
+        }
+
+        function switchMainTab(tabName) {
+            currentMainTab = tabName;
+            
+            const inactiveClass = "pb-3 text-sm md:text-base font-bold flex items-center gap-2 text-muted-foreground hover:text-foreground border-b-2 border-transparent transition-colors whitespace-nowrap";
+            const activeClass = "pb-3 text-sm md:text-base font-bold flex items-center gap-2 text-sky-400 border-b-2 border-primary transition-colors whitespace-nowrap";
+
+            document.getElementById('tab-subjects').className = inactiveClass;
+            document.getElementById('tab-live').className = inactiveClass;
+            document.getElementById('section-subjects').classList.add('hidden');
+            document.getElementById('section-live').classList.add('hidden');
+
+            if (tabName === 'subjects') {
+                document.getElementById('tab-subjects').className = activeClass;
+                document.getElementById('section-subjects').classList.remove('hidden');
+                loadSubjects();
+            } else if (tabName === 'live') {
+                document.getElementById('tab-live').className = activeClass;
+                document.getElementById('section-live').classList.remove('hidden');
+                switchLiveTab(currentLiveTab);
+            }
+        }
+
+        function switchLiveTab(tabName) {
+            currentLiveTab = tabName;
+            
+            const inactiveClass = "px-5 py-2 text-xs md:text-sm font-bold rounded-xl bg-card text-muted-foreground border border-border hover:text-foreground hover:border-primary/40 transition-colors";
+            const activeClass = "px-5 py-2 text-xs md:text-sm font-bold rounded-xl bg-primary text-black transition-colors shadow-md";
+
+            document.getElementById('subtab-live-now').className = inactiveClass;
+            document.getElementById('subtab-previous').className = inactiveClass;
+            document.getElementById('subtab-upcoming').className = inactiveClass;
+
+            if (tabName === 'live-now') {
+                document.getElementById('subtab-live-now').className = activeClass;
+                loadLiveClasses();
+            } else if (tabName === 'previous') {
+                document.getElementById('subtab-previous').className = activeClass;
+                loadPreviousLiveClasses();
+            } else if (tabName === 'upcoming') {
+                document.getElementById('subtab-upcoming').className = activeClass;
+                showUI('live-empty');
+            }
+        }
+
+        async function loadSubjects() {
+            if (!courseId) {
+                showUI('error', 'Course ID is missing.');
+                return;
+            }
+            showUI('loader');
+            const response = await fetchData(`${API_BASE}/api/subjects?id=${courseId}`);
+            const container = document.getElementById('subjects-container');
+            
+            if (response && response.data && response.data.length > 0) {
+                container.innerHTML = '';
+                response.data.forEach(subject => {
+                    const logo = subject.subject_logo || '';
+                    const title = subject.subject_name || 'Subject';
+                    
+                    const card = document.createElement('div');
+                    card.className = "glass-card hover-card rounded-3xl border border-border/80 bg-card/60 overflow-hidden cursor-pointer transition-all hover:border-[#38bdf8]/40 hover:-translate-y-1 shadow-xl flex flex-col group";
+                    card.onclick = () => {
+                        window.location.href = `topics.html?courseId=${courseId}&subjectId=${subject.subjectid}&subjectName=${encodeURIComponent(title)}&courseName=${encodeURIComponent(currentCourseName)}`;
+                    };
+
+                    card.innerHTML = `
+                        <div class="h-[140px] w-full relative overflow-hidden bg-surface border-b border-border flex items-center justify-center p-4">
+                            ${logo ? 
+                                `<img src="${logo}" alt="${title}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-500">` : 
+                                `<i class="fa-solid fa-book-open text-4xl text-primary/80 group-hover:text-primary transition-colors"></i>`
+                            }
+                            <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent"></div>
+                        </div>
+                        <div class="p-5 flex-1 flex flex-col justify-between">
+                            <h3 class="text-foreground font-black text-base leading-snug line-clamp-2 group-hover:text-primary transition-colors">
+                                ${title}
+                            </h3>
+                            <div class="mt-4 pt-3 border-t border-border flex items-center justify-between">
+                                <span class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Explore Topics</span>
+                                <span class="text-xs text-primary group-hover:translate-x-1 transition-transform"><i class="fa-solid fa-arrow-right"></i></span>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+                showUI('subjects');
+            } else {
+                showUI('error', 'No subjects available for this batch.');
+            }
+        }
+
+        function openPdf(pdfUrl) {
+            if (!pdfUrl) return;
+            window.open(`${PDF_BASE}${encodeURIComponent(pdfUrl)}`, '_blank');
+        }
+
+        function closeQualityModal() {
+            document.getElementById('quality-modal').classList.remove('active');
+        }
+
+        function launchPlayer(targetUrl, title) {
+            const proxyUrl = `${API_BASE}/api/player?url=${encodeURIComponent(targetUrl)}`;
+            window.location.href = `player.html?url=${encodeURIComponent(proxyUrl)}&title=${encodeURIComponent(title || 'Class')}&back=${encodeURIComponent(window.location.href)}`;
+        }
+
+        function showQualityModal(options, title) {
+            activeVideoTitle = title || 'Class';
+            const container = document.getElementById('quality-options');
+            container.innerHTML = '';
+            
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'quality-btn';
+                btn.textContent = opt.quality || opt.bitrate || 'Auto';
+                btn.onclick = () => {
+                    closeQualityModal();
+                    const streamPath = opt.path || opt.url || opt.file;
+                    launchPlayer(streamPath, activeVideoTitle);
+                };
+                container.appendChild(btn);
+            });
+            
+            document.getElementById('quality-modal').classList.add('active');
+        }
+
+        async function handleVideoClick(video) {
+            const isPdf = video.material_type && video.material_type.toUpperCase() === 'PDF';
+            if (isPdf) {
+                openPdf(video.file_link || video.pdf_link);
+                return;
+            }
+
+            const title = video.Title || 'Class Video';
+
+            // Try fetching video details
+            const vidResponse = await fetchData(`${API_BASE}/api/video?id=${courseId}&videoid=${video.id}`);
+            if (vidResponse && vidResponse.data) {
+                const data = vidResponse.data;
+                
+                if (data.encrypted_links && data.encrypted_links.length > 0) {
+                    showQualityModal(data.encrypted_links, title);
+                    return;
+                } 
+                if (data.download_links && data.download_links.length > 0) {
+                    showQualityModal(data.download_links, title);
+                    return;
+                }
+                if (data.livestream_links && data.livestream_links.length > 0) {
+                    showQualityModal(data.livestream_links, title);
+                    return;
+                } 
+                if (data.file_link || data.download_link) {
+                    launchPlayer(data.file_link || data.download_link, title);
+                    return;
+                }
+            }
+
+            // Fallback to video object itself
+            if (video.download_links && video.download_links.length > 0) {
+                showQualityModal(video.download_links, title);
+            } else if (video.livestream_links && video.livestream_links.length > 0) {
+                showQualityModal(video.livestream_links, title);
+            } else if (video.file_link || video.download_link) {
+                launchPlayer(video.file_link || video.download_link, title);
+            } else {
+                alert("Video stream not available.");
+            }
+        }
+
+        function createVideoCardHTML(video) {
+            const isPdf = video.material_type && video.material_type.toUpperCase() === 'PDF';
+            const thumb = video.thumbnail || 'https://appx-content-v2.classx.co.in/paid_course3/2026-09-12-0.9822338147333287.png';
+            const title = video.Title || 'Live Class';
+            const date = video.date_and_time || 'Recorded Class';
+
+            return `
+                <div onclick='handleVideoClick(${JSON.stringify(video).replace(/'/g, "&apos;")})' 
+                     class="glass-card hover-card rounded-3xl overflow-hidden cursor-pointer transition-all hover:border-[#38bdf8]/40 hover:-translate-y-1 shadow-xl flex flex-col group border border-border/80 bg-card/60">
+                    <div class="relative aspect-video w-full bg-surface overflow-hidden border-b border-border">
+                        <img src="${thumb}" loading="lazy" alt="${title}" class="w-full h-full object-cover opacity-85 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500">
+                        <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent"></div>
+                        <div class="absolute top-3 left-3">
+                            <span class="rounded-md border border-[#38bdf8]/30 bg-[#38bdf8]/10 px-2 py-0.5 text-[9px] font-black uppercase tracking-widest text-[#38bdf8]">
+                                ${isPdf ? 'NOTES' : 'VIDEO'}
+                            </span>
+                        </div>
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-[0_0_25px_rgba(56,189,248,0.6)] transform scale-75 group-hover:scale-100 transition-transform duration-300 text-black">
+                                <i class="${isPdf ? 'fa-solid fa-file-pdf' : 'fa-solid fa-play ml-0.5'} text-base"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col justify-between">
+                        <h3 class="text-foreground font-black text-base leading-snug line-clamp-2 group-hover:text-primary transition-colors">${title}</h3>
+                        <div class="text-[10px] text-muted-foreground font-bold uppercase mt-3 flex items-center gap-2">
+                            <i class="fa-regular fa-calendar-days text-primary"></i> ${date}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function loadLiveClasses() {
+            if (!courseId) return;
+            showUI('loader');
+            const response = await fetchData(`${API_BASE}/api/live?id=${courseId}`);
+            const container = document.getElementById('live-content-container');
+            
+            if (response && response.data && response.data.live && response.data.live.length > 0) {
+                container.innerHTML = '';
+                response.data.live.forEach((video) => { 
+                    container.insertAdjacentHTML('beforeend', createVideoCardHTML(video)); 
+                });
+                showUI('live-content');
+            } else {
+                showUI('live-empty');
+            }
+        }
+
+        async function loadPreviousLiveClasses() {
+            if (!courseId) return;
+            showUI('loader');
+            const response = await fetchData(`${API_BASE}/api/previous_live?id=${courseId}`);
+            const container = document.getElementById('live-content-container');
+            
+            if (response && response.data && response.data.length > 0) {
+                container.innerHTML = '';
+                response.data.forEach((video) => { 
+                    container.insertAdjacentHTML('beforeend', createVideoCardHTML(video)); 
+                });
+                showUI('live-content');
+            } else {
+                showUI('live-empty');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (courseId) {
+                loadSubjects();
+            } else {
+                showUI('error', 'Course ID is missing. Please go back to Batches.');
+            }
+        });
+    </script>
+</body>
+</html>

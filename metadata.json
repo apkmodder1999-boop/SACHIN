@@ -1,0 +1,6 @@
+{
+  "name": "SACHIN ACADEMY",
+  "description": "Discover live batches, recordings, study materials and video lectures from Sachin Academy.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

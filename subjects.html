@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NextHope - Course Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap');
+        :root {
+            --bg-color: #0f1015;
+            --card-bg: rgba(26, 27, 35, 0.6);
+            --card-border: rgba(255, 215, 0, 0.15);
+            --primary-color: #FFD700;
+            --primary-hover: #ffc107;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a5;
+            --glass-blur: blur(12px);
+            --gradient-gold: linear-gradient(135deg, #FFD700 0%, #FFA000 100%);
+            --gradient-bg: radial-gradient(circle at top right, rgba(255, 215, 0, 0.05) 0%, transparent 40%),
+                           radial-gradient(circle at bottom left, rgba(255, 215, 0, 0.03) 0%, transparent 40%);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-color); background-image: var(--gradient-bg); color: var(--text-primary); min-height: 100vh; line-height: 1.6; overflow-x: hidden; }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+        .navbar { position: fixed; top: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 5%; background: rgba(15, 16, 21, 0.8); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border-bottom: 1px solid rgba(255, 255, 255, 0.05); z-index: 1000; transition: all 0.3s ease; }
+        .logo-container { display: flex; align-items: center; gap: 12px; }
+        .logo { height: 45px; width: auto; border-radius: 8px; }
+        .brand-name { font-size: 1.8rem; font-weight: 800; background: var(--gradient-gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px; }
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-links a { font-family: 'Inter', sans-serif; font-weight: 500; color: var(--text-secondary); transition: color 0.3s; position: relative; }
+        .nav-links a:hover, .nav-links a.active { color: var(--primary-color); }
+        .nav-links a::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -4px; left: 0; background-color: var(--primary-color); transition: width 0.3s ease; }
+        .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 100px 20px 40px; }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; padding: 20px 0; }
+        .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 20px; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease, border-color 0.3s ease; backdrop-filter: blur(10px); display: flex; flex-direction: column; overflow: hidden; cursor: pointer; position: relative; }
+        .card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(255,215,0,0.1) 0%, transparent 100%); opacity: 0; transition: opacity 0.3s; }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 215, 0, 0.1); border-color: rgba(255, 215, 0, 0.4); }
+        .card:hover::before { opacity: 1; }
+        .card-img { width: 100%; height: 160px; object-fit: cover; border-radius: 10px; margin-bottom: 16px; background-color: #222; }
+        .card-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; color: var(--text-primary); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .tabs { display: flex; gap: 15px; margin-bottom: 30px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 10px; overflow-x: auto; scrollbar-width: none; }
+        .tabs::-webkit-scrollbar { display: none; }
+        .tab-btn { background: transparent; border: none; color: var(--text-secondary); font-family: 'Outfit', sans-serif; font-size: 1.1rem; font-weight: 600; cursor: pointer; padding: 8px 16px; border-radius: 8px; transition: all 0.3s; white-space: nowrap; }
+        .tab-btn:hover { color: var(--text-primary); background: rgba(255, 255, 255, 0.05); }
+        .tab-btn.active { color: var(--bg-color); background: var(--gradient-gold); }
+        .tab-content { display: none; animation: fadeIn 0.4s ease-out; }
+        .tab-content.active { display: block; }
+        .loader-container { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 300px; }
+        .loader { width: 48px; height: 48px; border: 5px solid rgba(255, 215, 0, 0.2); border-bottom-color: var(--primary-color); border-radius: 50%; display: inline-block; box-sizing: border-box; animation: rotation 1s linear infinite; }
+        .error-message { text-align: center; padding: 40px; color: #ff5252; background: rgba(255, 82, 82, 0.1); border-radius: 12px; margin: 20px 0; }
+        .breadcrumb { display: flex; align-items: center; gap: 10px; margin-bottom: 25px; font-size: 0.95rem; color: var(--text-secondary); }
+        .breadcrumb a { color: var(--text-secondary); transition: color 0.3s; }
+        .breadcrumb a:hover { color: var(--primary-color); }
+        .breadcrumb .separator { color: rgba(255, 255, 255, 0.2); }
+        .breadcrumb .current { color: var(--primary-color); font-weight: 500; }
+        .video-card .card-img { height: 180px; }
+        .play-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 50px; height: 50px; background: rgba(0,0,0,0.6); border-radius: 50%; display: flex; align-items: center; justify-content: center; opacity: 0.8; transition: all 0.3s; }
+        .video-card:hover .play-icon { opacity: 1; transform: translate(-50%, -50%) scale(1.1); background: var(--primary-color); }
+        .play-icon i { color: white; font-size: 20px; margin-left: 4px; }
+        .video-card:hover .play-icon i { color: var(--bg-color); }
+        .topic-card { display: flex; align-items: center; gap: 15px; padding: 20px; flex-direction: row; }
+        .topic-icon { width: 50px; height: 50px; border-radius: 12px; background: rgba(255, 215, 0, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary-color); font-size: 24px; }
+        .topic-info h3 { font-size: 1.1rem; margin-bottom: 4px; }
+        .topic-info p { font-size: 0.85rem; color: var(--text-secondary); }
+        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @media (max-width: 768px) { .nav-links { display: none; } .grid-container { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); } }
+        
+        /* Modal CSS */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(8px); display: none; justify-content: center; align-items: center; z-index: 2000; }
+        .modal-overlay.active { display: flex; }
+        .modal-content { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 30px; width: 90%; max-width: 400px; text-align: center; position: relative; animation: fadeIn 0.3s ease; }
+        .modal-close { position: absolute; top: 15px; right: 15px; background: transparent; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer; }
+        .modal-close:hover { color: var(--primary-color); }
+        .quality-btn { display: block; width: 100%; padding: 12px; margin-bottom: 10px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: var(--text-primary); border-radius: 8px; font-family: 'Outfit', sans-serif; font-size: 1rem; cursor: pointer; transition: all 0.3s; }
+        .quality-btn:hover { background: rgba(255, 215, 0, 0.15); border-color: var(--primary-color); color: var(--primary-color); }
+    </style>
+</head>
+<body>
+
+    <!-- Video Quality Modal -->
+    <div id="quality-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeQualityModal()">&times;</button>
+            <h2 style="margin-bottom: 20px; font-weight: 700;">Select Video Quality</h2>
+            <div id="quality-options"></div>
+        </div>
+    </div>
+
+    <nav class="navbar">
+        <div class="logo-container">
+            <img src="https://i.ibb.co/v4k8LdYN/nexthope.png" alt="NextHope Logo" class="logo">
+            <span class="brand-name">NextHope</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Batches</a></li>
+            <li><a href="#">About</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <div class="breadcrumb">
+            <a href="index.html">Home</a>
+            <span class="separator">/</span>
+            <span class="current" id="course-name-breadcrumb">Course</span>
+        </div>
+
+        <h1 id="course-title" style="margin-bottom: 30px; font-weight: 800; font-size: 2.5rem;">Loading Course...</h1>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="openTab('subjects', this)">Subjects</button>
+            <button class="tab-btn" onclick="openTab('live', this)">Live Classes</button>
+            <button class="tab-btn" onclick="openTab('previous-live', this)">Previous Live</button>
+        </div>
+
+        <div id="subjects" class="tab-content active">
+            <div id="subjects-container" class="grid-container"></div>
+        </div>
+
+        <div id="live" class="tab-content">
+            <div id="live-container" class="grid-container"></div>
+        </div>
+
+        <div id="previous-live" class="tab-content">
+            <div id="previous-live-container" class="grid-container"></div>
+        </div>
+    </main>
+
+    <script>
+        const API_BASE = window.location.origin;
+        const PDF_BASE = 'https://pdfweb.classx.co.in/pdfjs-latest/web/viewer.html?file=';
+
+        async function fetchData(url) {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                return await response.json();
+            } catch (error) {
+                console.error("Fetch error: ", error);
+                return null;
+            }
+        }
+
+        function getUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            const result = {};
+            for (const [key, value] of params.entries()) { result[key] = value; }
+            return result;
+        }
+
+        function showLoader(containerId) {
+            const container = document.getElementById(containerId);
+            if(container) container.innerHTML = `<div class="loader-container"><span class="loader"></span></div>`;
+        }
+
+        function showError(containerId, message) {
+            const container = document.getElementById(containerId);
+            if(container) {
+                container.innerHTML = `<div class="error-message"><i class="fas fa-exclamation-circle" style="font-size: 2rem; margin-bottom: 10px;"></i><p>${message}</p></div>`;
+            }
+        }
+
+        function closeQualityModal() {
+            document.getElementById('quality-modal').classList.remove('active');
+        }
+
+        function showQualityModal(options, isEncrypted) {
+            const container = document.getElementById('quality-options');
+            container.innerHTML = '';
+            
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'quality-btn';
+                btn.textContent = opt.quality || 'Auto';
+                btn.onclick = () => {
+                    closeQualityModal();
+                    if (isEncrypted) {
+                        const proxyUrl = `${API_BASE}/api/player?url=${encodeURIComponent(opt.path)}`;
+                        window.open(`player.html?url=${encodeURIComponent(proxyUrl)}`, '_blank');
+                    } else {
+                        window.open(`player.html?url=${encodeURIComponent(opt.path)}`, '_blank');
+                    }
+                };
+                container.appendChild(btn);
+            });
+            
+            document.getElementById('quality-modal').classList.add('active');
+        }
+
+        function openPdf(pdfUrl) {
+            if (!pdfUrl) return;
+            window.open(`${PDF_BASE}${encodeURIComponent(pdfUrl)}`, '_blank');
+        }
+
+        const params = getUrlParams();
+        const courseId = params.id;
+        const courseName = params.name ? decodeURIComponent(params.name) : `Course ${courseId}`;
+
+        document.getElementById('course-name-breadcrumb').textContent = courseName;
+        document.getElementById('course-title').textContent = courseName;
+
+        function openTab(tabId, element) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            element.classList.add('active');
+
+            if (tabId === 'live' && !document.getElementById('live-container').innerHTML.trim()) {
+                loadLiveClasses();
+            } else if (tabId === 'previous-live' && !document.getElementById('previous-live-container').innerHTML.trim()) {
+                loadPreviousLiveClasses();
+            }
+        }
+
+        async function loadSubjects() {
+            if (!courseId) return;
+            showLoader('subjects-container');
+            const response = await fetchData(`${API_BASE}/api/subjects?id=${courseId}`);
+            const container = document.getElementById('subjects-container');
+            
+            if (response && response.data && response.data.length > 0) {
+                container.innerHTML = '';
+                response.data.forEach(sub => {
+                    const card = document.createElement('div');
+                    card.className = 'card topic-card';
+                    card.onclick = () => {
+                        window.location.href = `topics.html?courseId=${courseId}&subjectId=${sub.subjectid}&subjectName=${encodeURIComponent(sub.subject_name)}&courseName=${encodeURIComponent(courseName)}`;
+                    };
+                    
+                    card.innerHTML = `
+                        <div style="flex-shrink:0;">
+                             <img src="${sub.subject_logo}" style="width: 60px; height: 60px; border-radius:12px; object-fit:cover; background:#222;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                             <div class="topic-icon" style="display:none; width: 60px; height: 60px;"><i class="fas fa-book"></i></div>
+                        </div>
+                        <div class="topic-info">
+                            <h3>${sub.subject_name}</h3>
+                            <p>${sub.is_paid == "1" ? '<i class="fas fa-lock" style="color:var(--primary-color);"></i> Premium' : 'Free'}</p>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            } else {
+                showError('subjects-container', 'No subjects found for this course.');
+            }
+        }
+
+        function createVideoCard(video) {
+            const card = document.createElement('div');
+            card.className = 'card video-card';
+            const isPdf = video.material_type && video.material_type.toUpperCase() === 'PDF';
+            
+            card.onclick = async () => {
+                if (isPdf) {
+                    openPdf(video.file_link || video.pdf_link);
+                } else {
+                    const vidResponse = await fetchData(`${API_BASE}/api/video?id=${courseId}&videoid=${video.id}`);
+                    if (vidResponse && vidResponse.data) {
+                        const data = vidResponse.data;
+                        
+                        if (data.encrypted_links && data.encrypted_links.length > 0) {
+                            showQualityModal(data.encrypted_links, true);
+                        } 
+                        else if (data.livestream_links && data.livestream_links.length > 0) {
+                            showQualityModal(data.livestream_links, false);
+                        } 
+                        else if (data.file_link) {
+                            const proxyUrl = `${API_BASE}/api/player?url=${encodeURIComponent(data.file_link)}`;
+                            window.open(`player.html?url=${encodeURIComponent(proxyUrl)}`, '_blank');
+                        } else {
+                            alert("Video link not found.");
+                        }
+                    } else {
+                        alert("Failed to fetch video details.");
+                    }
+                }
+            };
+            const thumb = video.thumbnail || `https://via.placeholder.com/300x180/222/FFD700?text=${isPdf ? 'PDF' : 'Video'}`;
+
+            card.innerHTML = `
+                <div style="position:relative;">
+                    <img src="${thumb}" class="card-img" onerror="this.src='https://via.placeholder.com/300x180/222/FFD700?text=${isPdf ? 'PDF' : 'Video'}'">
+                    <div class="play-icon"><i class="${isPdf ? 'fas fa-file-pdf' : 'fas fa-play'}"></i></div>
+                </div>
+                <h3 class="card-title" style="font-size: 1rem;">${video.Title || 'Live Class'}</h3>
+                <p style="color:var(--text-secondary); font-size: 0.85rem; margin-top:5px;"><i class="far fa-calendar-alt"></i> ${video.date_and_time || 'No date'}</p>
+            `;
+            return card;
+        }
+
+        async function loadLiveClasses() {
+            if (!courseId) return;
+            showLoader('live-container');
+            const response = await fetchData(`${API_BASE}/api/live?id=${courseId}`);
+            const container = document.getElementById('live-container');
+            
+            if (response && response.data && response.data.live && response.data.live.length > 0) {
+                container.innerHTML = '';
+                response.data.live.forEach(video => { container.appendChild(createVideoCard(video)); });
+            } else {
+                showError('live-container', 'No active live classes at the moment.');
+            }
+        }
+
+        async function loadPreviousLiveClasses() {
+            if (!courseId) return;
+            showLoader('previous-live-container');
+            const response = await fetchData(`${API_BASE}/api/previous_live?id=${courseId}`);
+            const container = document.getElementById('previous-live-container');
+            
+            if (response && response.data && response.data.length > 0) {
+                container.innerHTML = '';
+                response.data.forEach(video => { container.appendChild(createVideoCard(video)); });
+            } else {
+                showError('previous-live-container', 'No previous live classes found.');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (courseId) loadSubjects();
+            else showError('subjects-container', 'Course ID is missing.');
+        });
+    </script>
+</body>
+</html>

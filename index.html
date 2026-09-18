@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Explore Batches | SACHIN ACADEMY</title>
+    <meta name="description" content="Discover live batches, recordings, study materials and notes from Sachin Academy.">
+    <meta property="og:title" content="Explore Batches | SACHIN ACADEMY">
+    <meta property="og:description" content="Discover live batches, recordings, study materials and notes from Sachin Academy.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2338bdf8'><path d='M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z'/></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        background: '#090d16',
+                        sidebar: '#0d121f',
+                        card: '#111622',
+                        surface: '#0c101a',
+                        'surface-raised': '#161c2c',
+                        border: 'rgba(255, 255, 255, 0.08)',
+                        foreground: '#f8fafc',
+                        'muted-foreground': '#94a3b8',
+                        primary: '#38bdf8',
+                        'primary-foreground': '#000000',
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'Inter', 'system-ui', 'sans-serif'],
+                        inter: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #090d16; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #38bdf8; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #090d16;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        .bg-dots {
+            background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        .glass-card {
+            background: rgba(17, 22, 34, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        .press {
+            transition: transform 0.15s ease, filter 0.15s ease, background-color 0.15s ease;
+        }
+        .press:active {
+            transform: scale(0.97);
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col relative selection:bg-sky-500/30 selection:text-sky-200">
+
+    <!-- Subtle Ambient Background Accents -->
+    <div class="pointer-events-none fixed inset-0 z-0 bg-dots opacity-25"></div>
+    <div class="pointer-events-none fixed left-[-5%] top-[-5%] z-0 h-[350px] w-[350px] rounded-full bg-primary/20 blur-[140px]"></div>
+    <div class="pointer-events-none fixed bottom-[-10%] right-[-5%] z-0 h-[400px] w-[400px] rounded-full bg-primary/10 blur-[140px]"></div>
+
+    <!-- Mobile Sidebar Backdrop -->
+    <div id="sidebar-backdrop" onclick="toggleSidebar()" class="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm hidden md:hidden transition-opacity"></div>
+
+    <div class="relative z-10 flex min-h-screen w-full">
+
+        <!-- Sidebar (Sticky on Desktop, Drawer on Mobile) -->
+        <aside id="sidebar" class="fixed z-50 flex h-screen w-[260px] shrink-0 flex-col border-r border-border bg-sidebar transition-transform duration-300 md:sticky md:top-0 md:translate-x-0 -translate-x-full">
+            <div class="flex h-[70px] shrink-0 items-center justify-between border-b border-border px-6 sm:h-20">
+                <a class="press flex items-center gap-3" href="index.html">
+                    <div class="h-10 w-10 rounded-xl bg-sky-400/10 border border-sky-400/30 flex items-center justify-center text-primary shadow-sm">
+                        <i class="fa-solid fa-graduation-cap text-xl"></i>
+                    </div>
+                    <span class="text-xl font-black tracking-tight text-foreground">SACHIN <span class="text-[#38bdf8]">ACADEMY</span></span>
+                </a>
+                <button onclick="toggleSidebar()" aria-label="Close menu" class="text-muted-foreground transition-colors hover:text-foreground md:hidden p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <nav class="flex-1 space-y-8 overflow-y-auto px-3 py-5 pb-24 md:pb-5">
+                <div>
+                    <h3 class="mb-3 px-4 text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/80">Explore</h3>
+                    <ul class="space-y-1.5">
+                        <li>
+                            <button id="nav-all-batches" onclick="setActiveFilter('all')" type="button" class="flex w-full items-center gap-3 rounded-xl px-4 py-3.5 text-xs font-bold transition-all sm:text-sm border-l-[3px] border-[#38bdf8] bg-[#38bdf8]/15 text-[#38bdf8]">
+                                <i class="fa-solid fa-grip text-[#38bdf8]"></i>
+                                <span>All Batches</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button id="nav-enrolled-batches" onclick="setActiveFilter('enrolled')" type="button" class="flex w-full items-center justify-between rounded-xl px-4 py-3.5 text-xs font-bold transition-all sm:text-sm text-muted-foreground hover:bg-[#38bdf8]/10 hover:text-[#38bdf8]">
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-solid fa-graduation-cap"></i>
+                                    <span>Enrolled Batches</span>
+                                </div>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="mb-3 px-4 text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/80">Community</h3>
+                    <ul class="space-y-1.5">
+                        <li>
+                            <a href="https://t.me/learn_topper" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 rounded-xl px-4 py-3.5 text-xs font-bold text-muted-foreground transition-all hover:bg-[#38bdf8]/10 hover:text-[#38bdf8] sm:text-sm">
+                                <i class="fa-solid fa-paper-plane text-[#38bdf8]"></i>
+                                <span>Join Telegram</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Workspace -->
+        <div class="relative z-10 flex min-h-screen w-full flex-1 flex-col overflow-x-hidden">
+
+            <!-- Top Header -->
+            <header class="sticky top-0 z-30 flex h-[70px] shrink-0 items-center justify-between gap-4 border-b border-border bg-background/80 px-4 backdrop-blur-xl sm:h-20 sm:px-6">
+                <div class="flex w-full items-center gap-4">
+                    <button onclick="toggleSidebar()" aria-label="Open menu" class="press rounded-xl border border-border bg-card p-2.5 text-muted-foreground transition-colors hover:text-foreground md:hidden">
+                        <i class="fa-solid fa-bars text-base"></i>
+                    </button>
+                    <div class="hidden max-w-xl flex-1 items-center gap-2 rounded-xl border border-border bg-card px-4 py-2.5 text-xs font-semibold text-muted-foreground focus-within:border-primary/50 sm:flex">
+                        <i class="fa-solid fa-magnifying-glass text-muted-foreground"></i>
+                        <input id="search-input" oninput="handleSearch(this.value)" placeholder="Search courses, batches, subjects..." class="w-full border-none bg-transparent text-foreground outline-none placeholder:text-muted-foreground font-medium">
+                    </div>
+                </div>
+
+                <div class="flex shrink-0 items-center gap-2.5 sm:gap-4">
+                    <a href="https://t.me/learn_topper" target="_blank" rel="noopener noreferrer" class="press flex items-center gap-1.5 rounded-full border border-sky-400/40 bg-sky-400/10 px-3.5 py-1.5 text-xs font-bold text-sky-400 shadow-sm transition-colors hover:bg-sky-400/20 active:scale-95">
+                        <i class="fa-solid fa-paper-plane text-[11px]"></i>
+                        <span>Telegram</span>
+                    </a>
+                    <span class="watermark hidden select-none text-sm font-black uppercase tracking-[0.3em] text-foreground/30 sm:inline sm:text-base">SACHIN ACADEMY</span>
+                </div>
+            </header>
+
+            <!-- Mobile Search Bar -->
+            <div class="border-b border-border bg-background/50 px-4 py-2 sm:hidden">
+                <div class="flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-2 text-xs font-medium text-muted-foreground focus-within:border-primary/50">
+                    <i class="fa-solid fa-magnifying-glass text-muted-foreground"></i>
+                    <input id="mobile-search-input" oninput="handleSearch(this.value)" placeholder="Search batches, subjects..." class="w-full border-none bg-transparent text-foreground outline-none placeholder:text-muted-foreground">
+                </div>
+            </div>
+
+            <!-- Page Main Content -->
+            <main class="flex-1 px-4 pb-28 pt-6 sm:px-6 sm:pb-12 lg:px-8">
+                <div class="mx-auto flex w-full max-w-7xl flex-col">
+
+                    <!-- Hero Banner -->
+                    <div class="fade-in mb-8 text-center sm:text-left">
+                        <div class="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-primary">
+                            <i class="fa-solid fa-sparkles"></i> Welcome to SACHIN ACADEMY
+                        </div>
+                        <h1 class="mb-3 text-3xl font-black leading-tight tracking-tight text-foreground sm:text-5xl">
+                            Explore <br class="hidden sm:block">
+                            <span class="bg-gradient-to-r from-sky-400 via-cyan-300 to-sky-500 bg-clip-text text-transparent">All Batches</span>
+                        </h1>
+                        <p class="mx-auto max-w-2xl text-sm font-medium text-muted-foreground sm:mx-0 sm:text-base">
+                            Discover live batches, recordings, and high-yield course material. Start learning now!
+                        </p>
+                    </div>
+
+                    <!-- Category Tab Bar -->
+                    <div class="no-scrollbar fade-in mb-8 flex items-center gap-6 overflow-x-auto border-b border-border sm:gap-8">
+                        <button id="tab-all" onclick="setMainTab('all')" type="button" class="relative shrink-0 pb-2 text-sm font-bold transition-colors sm:text-base text-sky-400 after:absolute after:-bottom-px after:left-0 after:h-[3px] after:w-full after:rounded-t after:bg-primary after:content-['']">
+                            All Batches
+                        </button>
+                        <button id="tab-enrolled" onclick="setMainTab('enrolled')" type="button" class="relative flex items-center gap-2 shrink-0 pb-2 text-sm font-bold transition-colors sm:text-base text-muted-foreground hover:text-foreground">
+                            <span>Enrolled Batches</span>
+                        </button>
+                    </div>
+
+                    <!-- Filter Pills -->
+                    <div class="no-scrollbar fade-in mb-6 flex w-full items-center gap-3 overflow-x-auto pb-2 sm:gap-4">
+                        <button id="pill-all" onclick="setCategoryPill('all')" type="button" class="press shrink-0 whitespace-nowrap rounded-xl border px-6 py-3 text-xs font-black uppercase tracking-widest transition-colors sm:text-sm border-primary bg-primary text-primary-foreground shadow-md">
+                            All Courses
+                        </button>
+                        <button id="pill-our" onclick="setCategoryPill('our')" type="button" class="press shrink-0 whitespace-nowrap rounded-xl border px-6 py-3 text-xs font-black uppercase tracking-widest transition-colors sm:text-sm border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground">
+                            Our Courses
+                        </button>
+                        <button id="pill-featured" onclick="setCategoryPill('featured')" type="button" class="press shrink-0 whitespace-nowrap rounded-xl border px-6 py-3 text-xs font-black uppercase tracking-widest transition-colors sm:text-sm border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground">
+                            Featured Courses
+                        </button>
+                    </div>
+
+                    <!-- Batches Count -->
+                    <div class="mb-6 flex items-center justify-between text-xs font-semibold text-muted-foreground">
+                        <div>Showing <span id="batch-count" class="font-bold text-foreground">0</span> batches</div>
+                    </div>
+
+                    <!-- Loader -->
+                    <div id="loader" class="flex flex-col justify-center items-center py-24 hidden">
+                        <div class="w-12 h-12 border-4 border-card border-t-primary rounded-full animate-spin shadow-[0_0_20px_rgba(56,189,248,0.4)]"></div>
+                        <p class="text-muted-foreground text-sm mt-4 font-medium animate-pulse">Loading Batches...</p>
+                    </div>
+
+                    <!-- Error Container -->
+                    <div id="error-container" class="hidden text-center py-16">
+                        <div class="w-16 h-16 bg-red-500/10 border border-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fa-solid fa-triangle-exclamation text-red-400 text-2xl"></i>
+                        </div>
+                        <p id="error-message" class="text-red-400 font-medium"></p>
+                    </div>
+
+                    <!-- Batches Grid Container -->
+                    <div id="batches-container" class="grid grid-cols-1 gap-6 pb-12 sm:gap-8 md:grid-cols-2">
+                        <!-- Batches will be rendered dynamically -->
+                    </div>
+
+                    <!-- Empty Search Result Container -->
+                    <div id="empty-container" class="hidden text-center py-20">
+                        <div class="w-16 h-16 bg-white/5 border border-white/10 rounded-full flex items-center justify-center mx-auto mb-4 text-muted-foreground">
+                            <i class="fa-solid fa-magnifying-glass text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-foreground mb-1">No batches found</h3>
+                        <p class="text-sm text-muted-foreground">Try adjusting your search or category filter.</p>
+                    </div>
+
+                </div>
+            </main>
+        </div>
+
+        <!-- Mobile Bottom Navigation Bar -->
+        <nav class="fixed bottom-0 left-0 z-50 flex w-full items-center justify-around border-t border-border bg-background/95 px-4 py-3 pb-[calc(12px+env(safe-area-inset-bottom))] backdrop-blur-xl md:hidden">
+            <button onclick="setActiveFilter('all')" type="button" class="press flex flex-1 shrink-0 flex-col items-center gap-1.5 transition-colors text-primary">
+                <i class="fa-solid fa-grip text-lg"></i>
+                <span class="text-[9px] font-bold uppercase tracking-wider">All Batches</span>
+            </button>
+            <button onclick="setActiveFilter('enrolled')" type="button" class="press relative flex flex-1 shrink-0 flex-col items-center gap-1.5 transition-colors text-muted-foreground">
+                <i class="fa-solid fa-graduation-cap text-lg"></i>
+                <span class="text-[9px] font-bold uppercase tracking-wider">Enrolled</span>
+            </button>
+            <a href="https://t.me/learn_topper" target="_blank" rel="noopener noreferrer" class="press flex flex-1 shrink-0 flex-col items-center gap-1.5 text-muted-foreground transition-colors hover:text-primary">
+                <i class="fa-solid fa-paper-plane text-lg"></i>
+                <span class="text-[9px] font-bold uppercase tracking-wider">Telegram</span>
+            </a>
+        </nav>
+
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin;
+        let allBatches = [];
+        let currentSearch = '';
+        let currentCategory = 'all';
+        let currentTab = 'all';
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebar-backdrop');
+            const isOpen = !sidebar.classList.contains('-translate-x-full');
+            
+            if (isOpen) {
+                sidebar.classList.add('-translate-x-full');
+                backdrop.classList.add('hidden');
+            } else {
+                sidebar.classList.remove('-translate-x-full');
+                backdrop.classList.remove('hidden');
+            }
+        }
+
+        async function fetchData(url) {
+            try {
+                const cached = sessionStorage.getItem(url);
+                if (cached) return JSON.parse(cached);
+
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+                sessionStorage.setItem(url, JSON.stringify(data));
+                return data;
+            } catch (error) {
+                console.error("Fetch error: ", error);
+                return null;
+            }
+        }
+
+        function showUI(state, message = '') {
+            document.getElementById('loader').classList.add('hidden');
+            document.getElementById('error-container').classList.add('hidden');
+            document.getElementById('batches-container').classList.add('hidden');
+            document.getElementById('empty-container').classList.add('hidden');
+
+            if (state === 'loader') {
+                document.getElementById('loader').classList.remove('hidden');
+            } else if (state === 'error') {
+                document.getElementById('error-container').classList.remove('hidden');
+                document.getElementById('error-message').textContent = message;
+            } else if (state === 'content') {
+                document.getElementById('batches-container').classList.remove('hidden');
+            } else if (state === 'empty') {
+                document.getElementById('empty-container').classList.remove('hidden');
+            }
+        }
+
+        function handleSearch(query) {
+            currentSearch = query.trim().toLowerCase();
+            document.getElementById('search-input').value = query;
+            document.getElementById('mobile-search-input').value = query;
+            renderBatches();
+        }
+
+        function setMainTab(tab) {
+            currentTab = tab;
+            const tabAll = document.getElementById('tab-all');
+            const tabEnrolled = document.getElementById('tab-enrolled');
+
+            const activeClass = "relative shrink-0 pb-2 text-sm font-bold transition-colors sm:text-base text-sky-400 after:absolute after:-bottom-px after:left-0 after:h-[3px] after:w-full after:rounded-t after:bg-primary after:content-['']";
+            const inactiveClass = "relative flex items-center gap-2 shrink-0 pb-2 text-sm font-bold transition-colors sm:text-base text-muted-foreground hover:text-foreground";
+
+            if (tab === 'all') {
+                tabAll.className = activeClass;
+                tabEnrolled.className = inactiveClass;
+            } else {
+                tabAll.className = inactiveClass;
+                tabEnrolled.className = activeClass;
+            }
+            renderBatches();
+        }
+
+        function setActiveFilter(filter) {
+            if (window.innerWidth < 768) {
+                const sidebar = document.getElementById('sidebar');
+                const backdrop = document.getElementById('sidebar-backdrop');
+                sidebar.classList.add('-translate-x-full');
+                backdrop.classList.add('hidden');
+            }
+            setMainTab(filter);
+        }
+
+        function setCategoryPill(cat) {
+            currentCategory = cat;
+            const pills = ['all', 'our', 'featured'];
+            pills.forEach(p => {
+                const el = document.getElementById(`pill-${p}`);
+                if (p === cat) {
+                    el.className = "press shrink-0 whitespace-nowrap rounded-xl border px-6 py-3 text-xs font-black uppercase tracking-widest transition-colors sm:text-sm border-primary bg-primary text-primary-foreground shadow-md";
+                } else {
+                    el.className = "press shrink-0 whitespace-nowrap rounded-xl border px-6 py-3 text-xs font-black uppercase tracking-widest transition-colors sm:text-sm border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground";
+                }
+            });
+            renderBatches();
+        }
+
+        function renderBatches() {
+            const container = document.getElementById('batches-container');
+            let filtered = allBatches.filter(batch => {
+                const matchesSearch = !currentSearch || (batch.batch_name && batch.batch_name.toLowerCase().includes(currentSearch));
+                return matchesSearch;
+            });
+
+            if (currentCategory === 'featured') {
+                filtered = filtered.slice(0, Math.ceil(filtered.length / 2));
+            } else if (currentCategory === 'our') {
+                filtered = filtered.slice(Math.floor(filtered.length / 3));
+            }
+
+            document.getElementById('batch-count').textContent = filtered.length;
+
+            if (filtered.length === 0) {
+                showUI('empty');
+                return;
+            }
+
+            container.innerHTML = '';
+            filtered.forEach((batch, idx) => {
+                const batchImg = batch.batch_image || 'https://appx-content-v2.classx.co.in/paid_course3/2026-09-12-0.9822338147333287.png';
+                const card = document.createElement('article');
+                card.className = 'glass-card hover-card group flex w-full flex-col overflow-hidden rounded-3xl border border-border/80 bg-card/60 shadow-xl transition-all hover:border-[#38bdf8]/40 hover:-translate-y-1';
+                
+                const badgeLabel = idx % 2 === 0 ? 'Trending' : 'Featured';
+
+                card.innerHTML = `
+                    <div onclick="window.location.href='content.html?id=${batch.id}&name=${encodeURIComponent(batch.batch_name)}'" class="relative block aspect-video w-full overflow-hidden border-b border-border bg-surface cursor-pointer">
+                        <img alt="" aria-hidden="true" class="absolute inset-0 h-full w-full object-cover opacity-30 blur-2xl" loading="lazy" src="${batchImg}">
+                        <img alt="${batch.batch_name}" loading="lazy" class="relative z-10 h-full w-full object-contain opacity-90 transition-transform duration-500 group-hover:scale-[1.02] group-hover:opacity-100" src="${batchImg}">
+                        <div class="pointer-events-none absolute inset-0 z-20 bg-gradient-to-t from-background/90 via-transparent to-transparent"></div>
+                    </div>
+                    <div class="relative z-30 flex flex-1 flex-col justify-between p-5 sm:p-6">
+                        <div>
+                            <div class="mb-2.5 flex flex-wrap items-center gap-1.5">
+                                <span class="rounded-md border border-[#38bdf8]/30 bg-[#38bdf8]/10 px-2 py-0.5 text-[9px] font-black uppercase tracking-widest text-[#38bdf8]">${badgeLabel}</span>
+                                <span class="flex items-center gap-1 rounded-md border border-border bg-surface-raised px-2 py-0.5 text-[9px] font-black uppercase tracking-widest text-muted-foreground">
+                                    <i class="fa-regular fa-clock text-[9px]"></i> 365 Days
+                                </span>
+                            </div>
+                            <a href="content.html?id=${batch.id}&name=${encodeURIComponent(batch.batch_name)}">
+                                <h3 class="mb-3 line-clamp-2 text-lg font-black leading-tight tracking-tight text-foreground transition-colors group-hover:text-primary sm:text-xl">
+                                    ${batch.batch_name}
+                                </h3>
+                            </a>
+                        </div>
+                        <div class="mt-2 border-t border-border/60 pt-4">
+                            <div class="mb-3.5 flex items-center justify-between">
+                                <div class="flex flex-col">
+                                    <span class="text-xl font-black leading-none text-emerald-400">FREE ACCESS</span>
+                                    <span class="mt-1 text-[9px] font-bold uppercase tracking-wider text-muted-foreground">Full Course Access</span>
+                                </div>
+                                <button type="button" onclick="window.location.href='content.html?id=${batch.id}&name=${encodeURIComponent(batch.batch_name)}'" class="press inline-flex items-center gap-1.5 rounded-xl border px-3.5 py-2 text-[10px] font-black uppercase tracking-wider transition-all sm:text-xs border-primary/40 bg-primary/10 text-sky-400 hover:border-primary hover:bg-primary/20">
+                                    <i class="fa-solid fa-graduation-cap text-xs"></i> Enroll Now
+                                </button>
+                            </div>
+                            <a class="press flex w-full items-center justify-center gap-2 rounded-xl border border-primary/50 bg-primary py-3 text-center text-xs font-black uppercase tracking-[0.15em] text-primary-foreground shadow-md transition-all hover:bg-sky-400" href="content.html?id=${batch.id}&name=${encodeURIComponent(batch.batch_name)}">
+                                Let's Study <i class="fa-solid fa-play text-xs"></i>
+                            </a>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            showUI('content');
+        }
+
+        async function loadBatches() {
+            showUI('loader');
+            const response = await fetchData(`${API_BASE}/batches.json`);
+            if (response && response.data && response.data.length > 0) {
+                allBatches = response.data;
+                renderBatches();
+            } else {
+                showUI('error', 'Failed to load batches. Please try again later.');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadBatches);
+    </script>
+</body>
+</html>

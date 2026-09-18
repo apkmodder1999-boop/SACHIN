@@ -1,0 +1,107 @@
+{
+    "status": 200,
+    "message": "Fetched 20 unique batches.",
+    "count": 20,
+    "data": [
+        {
+            "id": "8",
+            "batch_name": "KVS INTERVIEW BATCH old",
+            "batch_image": "https://appx-content-v2.classx.co.in/paid_course3/2026-04-21-0.08489777653031139.png"
+        },
+        {
+            "id": "152",
+            "batch_name": "KVS PRT COMPLETE BATCH [GENERAL PAPER + ONLINE INTERVIEW]*",
+            "batch_image": "https://appx-content-v2.classx.co.in/paid_course3/2025-10-25-0.04739045005277498.png"
+        },
+        {
+            "id": "247",
+            "batch_name": "KVS/NVS TIER - 1 COMPLETE BATCH",
+            "batch_image": "https://appx-content-v2.classx.co.in/paid_course3/2026-08-28-0.5798368854602307.jpeg"
+        },
+        {
+            "id": "363",
+            "batch_name": "KVS/NVS INTERVIEW BATCH",
+            "batch_image": "https://appx-content-v2.classx.co.in/paid_course3/2026-04-21-0.08489777653031139.png"
+        },
+        {
+            "id": "364",
+            "batch_name": "CTET PAPER 1 & 2 COURSE (2026)",
+            "batch_image": "https://appx-content-v2.classx.co.in/paid_course3/2026-09-12-0.9822338147333287.png"
+        },
+        {
+            "id": "56",
+            "batch_name": "BIHAR TRE 3.0 (9th TO 10th) COMPLETE BATCH (LANGUAGE + G.S + SST)",
+            "batch_image": "https://appxcontent.kaxa.in/paid_course3/2024-02-20-0.4486703244894761.jpg"
+        },
+        {
+            "id": "72",
+            "batch_name": "BIHAR TRE 3.0 FREE PRACTICE BATCH ",
+            "batch_image": "https://appxcontent.kaxa.in/paid_course3/2024-03-27-0.28488634777230737.jpg"
+        },
+        {
+            "id": "75",
+            "batch_name": "BPSC TRE 4.0 (9th TO 10th) COMPLETE BATCH (LANGUAGE + G.S + SST)",
+            "batch_image": "https://appxcontent.kaxa.in/paid_course3/2024-11-07-0.9025426514436954.jpg"
+        },
+        {
+            "id": "278",
+            "batch_name": "BPSC TRE 4.0 FREE NCERT PRACTICE BATCH ",
+            "batch_image": "https://appx-content-v2.classx.co.in/paid_course3/2026-02-16-0.17555006151682273.jpeg"
+        },
+        {
+            "id": "281",
+            "batch_name": "UP SUPERTET PRIMARY (1st to 5th) COMPLETE BATCH",
+            "batch_image": "https://appx-content-v2.classx.co.in/paid_course3/2026-09-09-0.35454020988220547.png"
+        },
+        {
+            "id": "248",
+            "batch_name": "CTET PAPER - 1 & 2 COURSE*",
+            "batch_image": "https://appx-content-v2.classx.co.in/paid_course3/2026-01-01-0.41797904061998503.jpg"
+        },
+        {
+            "id": "249",
+            "batch_name": "CTET PAPER - 1 COURSE*",
+            "batch_image": "https://appx-content-v2.classx.co.in/paid_course3/2026-01-01-0.755009849439867.jpg"
+        },
+        {
+            "id": "366",
+            "batch_name": "CTET PAPER 1 COURSE (2026)",
+            "batch_image": "https://appx-content-v2.classx.co.in/paid_course3/2026-09-12-0.8030011830980095.png"
+        },
+        {
+            "id": "345",
+            "batch_name": "UP TGT COMPLETE BATCH (SCIENCE)",
+            "batch_image": "https://appx-content-v2.classx.co.in/paid_course3/2026-09-07-0.2456988777095369.png"
+        },
+        {
+            "id": "349",
+            "batch_name": "UP PGT COMPLETE BATCH (HINDI)",
+            "batch_image": "https://appx-content-v2.classx.co.in/paid_course3/2026-09-07-0.872367415319617.png"
+        },
+        {
+            "id": "177",
+            "batch_name": "BPSC TRE 4.0 PRT COMPLETE BATCH ✅",
+            "batch_image": "https://appx-content-v2.classx.co.in/paid_course3/2025-12-21-0.7323578711421559.png"
+        },
+        {
+            "id": "323",
+            "batch_name": "BIHAR TRE 4.0 PRT COMPLETE BATCH",
+            "batch_image": "https://appx-content-v2.classx.co.in/paid_course3/2026-09-07-0.009894269282128887.png"
+        },
+        {
+            "id": "179",
+            "batch_name": "BPSC TRE 4.0 (6th TO 8th) COMPLETE BATCH (LANGUAGE + G.S + ENGLISH)✅",
+            "batch_image": "https://appx-content-v2.classx.co.in/paid_course3/2025-12-21-0.6872761799484489.png"
+        },
+        {
+            "id": "319",
+            "batch_name": "BIHAR TRE 4.0 (6th TO 8th) COMPLETE BATCH (LANGUAGE + G.S + ENGLISH)",
+            "batch_image": "https://appx-content-v2.classx.co.in/paid_course3/2026-09-07-0.8661632685465565.png"
+        },
+        {
+            "id": "361",
+            "batch_name": "JHARKHAND TET PAPER - 2 COURSE",
+            "batch_image": "https://appx-content-v2.classx.co.in/paid_course3/2026-09-07-0.18984778730489593.png"
+        }
+    ]
+}
